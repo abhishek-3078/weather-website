@@ -17,6 +17,7 @@ hbs.registerPartials(partialsPath)
 //set up express directory to serve
 app.use(express.static(path.join(__dirname,'../public')))
 
+const port=process.env.PORT||3000;
 app.get('',(req,res)=>{
     res.render('index',{
         title:'weather app',
@@ -112,6 +113,6 @@ app.get('*',(req,res)=>{
         errorMessage:'Page not found'
     })
 })
-app.listen(3000,()=>{
-    console.log("server is up on port 3000")
+app.listen(port,()=>{
+    console.log("server is up on port "+port)
 })
