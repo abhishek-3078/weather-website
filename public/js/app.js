@@ -8,6 +8,7 @@ const iconDiv=document.querySelector('.icon')
 const upcomingIcon=document.querySelectorAll('.wIcon')
 const time=document.querySelectorAll('.time')
 const temperatureBox=document.querySelectorAll('.temp')
+const upcomingForecast=document.querySelector('.upcoming-forecast')
 const printMessage=(data)=>{
     if(data.error){
         messageOne.textContent=data.error
@@ -28,10 +29,7 @@ const printMessage=(data)=>{
     }
 }
 const printUpcoming=(data)=>{
-    // console.log("time:",data[0].dt)
-    // time.innerText=moment.unix(data[0].dt).format('hh:mm A')
-    // upcomingIcon[k++].setAttribute('src',`https://www.openweathermap.org/img/wn/${data[0].weather[0].icon}@2x.png`)
-    // temperatureBox.innerText=data[0].main.temp+"\xB0 C"
+    upcomingForecast.style.display="flex"
     let k=0;
     for(let i of data){
         console.log(i)
@@ -45,7 +43,11 @@ const printUpcoming=(data)=>{
 
 }
 const myWeather=()=>{
-    console.log("hello")
+    iconDiv.innerHTML=""
+    messageOne.textContent='Loading...';
+    messageTwo.textContent=''
+    upcomingForecast.style.display="none";
+    
 if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition((location)=>{
         console.log(location.coords)
@@ -55,6 +57,7 @@ if(navigator.geolocation){
             // console.log(res.json())
             
             res.json().then((data)=>{
+                
                 printMessage(data)
                 printUpcoming(data.data)
             })
@@ -68,11 +71,12 @@ if(navigator.geolocation){
 weatherForm.addEventListener('submit',(e)=>{
     
     e.preventDefault()
-    if(e.target.name==="myFunction") return myWeather();
+    // if(e.target.name==="myFunction") return myWeather();
     const location=search.value
     iconDiv.innerHTML=""
     messageOne.textContent='Loading...';
     messageTwo.textContent=''
+    upcomingForecast.style.display="none";
     fetch('/weather?address='+location).then((response)=>{
         response.json().then((data)=>{
             printMessage(data)
