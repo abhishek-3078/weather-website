@@ -65,6 +65,10 @@ button,input[type="button"]{
 .icon{
     width:50%
 }
+.forecast{
+    width: 120px;
+    /* border: 2px solid red; */
+}
 img{
     display: block;
 }
