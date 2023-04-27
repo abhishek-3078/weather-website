@@ -4,9 +4,8 @@ const app=express();
 const path=require('path')
 const hbs=require('hbs');
 const forecast=require('./utils/forecast.js')
-const geocode=require('./utils/geocode.js')
-// api= y2GyLtvl6n26KPlWX7PSAppYjpvk424V
-//curr condn:http://dataservice.accuweather.com/currentconditions/v1/apikey=y2GyLtvl6n26KPlWX7PSAppYjpvk424V
+const geocode=require('./utils/geocode.js');
+const {Forecast,upcomingForecast} = require('./utils/forecast.js');
 app.use(cors())
 const viewspath=path.join(__dirname,'../templates/views')
 const partialsPath=path.join(__dirname,'../templates/partials')
@@ -66,20 +65,35 @@ app.get('/weather',(req,res)=>{
             return res.send({error});
         }
         console.log(longitude,latitude);
-        forecast(latitude,longitude,(error,{Temperature,humidity,feels_like,location})=>{
+        forecast(latitude,longitude,(error,{Temperature,humidity,feels_like,location,icon,data})=>{
             if(error) return res.send({error})
             res.send({
                 Temperature,
                 humidity,
                 feels_like,
-                location
+                location,
+                icon,
+                data
 
             })
         })
     })
     
 })
-
+app.get('/myweather',(req,res)=>{
+    console.log(req.query)
+    forecast(req.query.latitude,req.query.longitude,(error,{Temperature,humidity,feels_like,location,icon,data})=>{
+        if(error) return res.send({error})
+        res.send({ 
+            Temperature,
+            humidity,
+            feels_like,
+            location,
+            icon,
+            data
+        })
+    })
+})
 app.get('/products',(req,res)=>{
     if(!req.query.search){
         return res.send({
