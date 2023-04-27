@@ -16,49 +16,36 @@ const axios=require('axios')
 
 //     })
 // }
+// pollution
+const upcomingForecast=async(latitude,longitude)=>{
+    const url="https://api.openweathermap.org/data/2.5/forecast?lat="+latitude+"&lon="+longitude+"&units=metric&appid=aa04558a0788b847bf61784866807d42"
+    try{
+        console.log(url)
+        const response=await axios.get(url)
+        
+        return response.data.list.slice(0,5)
+    }catch(e){
+        return undefined
+    }
+}
 const Forecast=(latitude,longitude,callback)=>{
     const url="https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=metric&appid=aa04558a0788b847bf61784866807d42"
-//     request({url:url,json:true},(error,response)=>{
 
-//         if(error){
-//             callback("unable to connect internet");
-//         }
-//         else if(response.body.cod>=400){
-//             callback(response.body.message,undefined)
-//         }
-//         else{
-//             callback(undefined,{
-//                 Temperature:response.body.main.temp,
-//                 humidity:response.body.main.humidity,
-//                 feels_like:response.body.main.feels_like,
-//                 location:response.body.name
-//             })
-//         }
-//     })
-// }
-    axios.get(url).then((response)=>{
-        
+    axios.get(url).then(async (response)=>{
+        // console.log("upcoming data:",await upcomingForecast(latitude,longitude))
         callback(undefined,{
             Temperature:response.data.main.temp,
             humidity:response.data.main.humidity,
             feels_like:response.data.main.feels_like,
-            location:response.data.name
+            location:response.data.name,
+            icon:response.data.weather[0].icon,
+            data:await upcomingForecast(latitude,longitude)
         })
     }).catch((error)=>{
         callback("unable to connect to internet")
-    })
-    
-    
-        
+    })      
 }
 
-module.exports=Forecast
+module.exports=Forecast,upcomingForecast
 
 
-
-
-
-
-//     })
-// }
-module.exports=Forecast
